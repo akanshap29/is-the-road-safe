@@ -1,0 +1,50 @@
+# importing modules and libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn import linear_model
+
+# printing the data from CSV file 
+df = pd.read_csv("pricebook.csv")
+df
+
+
+
+
+
+# defining regression object 
+reg = linear_model.LinearRegression()
+reg.fit(df[['area']],df.price)
+
+# checking the price for a random area house
+reg.predict(5511)
+
+reg.coef_ # find out the value of coefficient of area(independent variable) i.e "m" in y = mx + c
+reg.intercept # finds value of "c"
+
+'''
+if reg.coef_ = f and reg.intercept = g then the price predicted by reg.predict(5511)
+ would be exactly equals to (5511)*f + g
+ so price = (reg.coef_)*(area) + (reg.intercept)
+ '''
+
+
+# plotting the data on graph for visualization
+%matplotlib inline 
+plt.xlable('area(sq.ft)')  # x axis is representing area(sq.ft)
+plt.ylable('price(USD)')   # y axis is representing the price of house(USD)
+plt.scatter(df.area,df.price,color='blue') # plotting the input discrete data from pricebook.csv
+plt.plot(df.area,reg.predict(df[['area']]),color='red') # plotting the line y = mx + c
+
+
+
+
+
+
+#  now we have generated linear regression model, now its ready to take input as set of many areas.
+d = pd.read_csv("areaset.csv") # taking a input area set for price prediction.
+d.head(3) # taking only areas upto serial no. 3 as written in csv file
+
+p = reg.predict(d) # assigning a variable to price of houses as predicted by regression model.
+d['price'] = p
+d.to_csv("prediction.csv") # putting predicted prices in front of areas written in above csv file and giving a output csv file as "prediction"
